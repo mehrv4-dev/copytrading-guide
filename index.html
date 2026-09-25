@@ -1,0 +1,281 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>راهنمای کپی‌تریدینگ ماتریکس</title>
+<style>
+  :root{
+    --bg:#f5f6fb; --surface:#ffffff; --border:#e2e5f0; --border-soft:#ebeef6;
+    --ink:#171c2e; --ink-muted:#666f86; --ink-faint:#8a91a6;
+    --accent:#12806a; --accent-ink:#0d5c4c; --accent-soft:#e4f3ef; --accent-border:#bfe3d9;
+    --warn:#95490f; --warn-soft:#fdf1e3; --warn-border:#f2d6ac;
+    --chip-bg:#101522; --chip-ink:#eef1f7;
+    --shadow: 0 1px 2px rgba(23,28,46,.04), 0 8px 24px -12px rgba(23,28,46,.12);
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#12141c; --surface:#191c27; --border:#2a2e3d; --border-soft:#242836;
+      --ink:#eef0f6; --ink-muted:#a2a8ba; --ink-faint:#7d8296;
+      --accent:#38b39a; --accent-ink:#8fe0cd; --accent-soft:#173229; --accent-border:#215243;
+      --warn:#e3a463; --warn-soft:#2e2214; --warn-border:#523c1e;
+      --chip-bg:#eef0f6; --chip-ink:#12141c;
+      --shadow: 0 1px 2px rgba(0,0,0,.3), 0 8px 24px -12px rgba(0,0,0,.5);
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#12141c; --surface:#191c27; --border:#2a2e3d; --border-soft:#242836;
+    --ink:#eef0f6; --ink-muted:#a2a8ba; --ink-faint:#7d8296;
+    --accent:#38b39a; --accent-ink:#8fe0cd; --accent-soft:#173229; --accent-border:#215243;
+    --warn:#e3a463; --warn-soft:#2e2214; --warn-border:#523c1e;
+    --chip-bg:#eef0f6; --chip-ink:#12141c;
+    --shadow: 0 1px 2px rgba(0,0,0,.3), 0 8px 24px -12px rgba(0,0,0,.5);
+  }
+
+  @import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;600;700;800&display=swap');
+
+  *{box-sizing:border-box}
+  html,body{ background:var(--bg); }
+  body{
+    color:var(--ink);
+    font-family:'Vazirmatn', Tahoma, sans-serif;
+    margin:0; padding:0; line-height:1.85;
+    direction:rtl; text-align:right;
+  }
+  .wrap{ max-width:760px; margin:0 auto; padding:28px 20px 64px; }
+
+  .eyebrow{
+    display:inline-flex; align-items:center; gap:6px;
+    font-size:12.5px; font-weight:700; letter-spacing:.03em;
+    color:var(--accent-ink); background:var(--accent-soft);
+    border:1px solid var(--accent-border); border-radius:999px;
+    padding:5px 14px; margin-bottom:16px;
+  }
+  h1{ font-size:26px; font-weight:800; margin:0 0 10px; text-wrap:balance; }
+  .lede{ color:var(--ink-muted); font-size:15.5px; margin:0 0 22px; max-width:60ch; }
+
+  .handle-card{
+    display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap;
+    background:var(--surface); border:1px solid var(--border); border-radius:16px;
+    padding:16px 18px; margin-bottom:26px; box-shadow:var(--shadow);
+  }
+  .handle-card .label{ font-size:12.5px; color:var(--ink-faint); font-weight:600; margin-bottom:4px; }
+  .handle-chip{
+    font-family:'Vazirmatn',monospace; direction:ltr; unicode-bidi:isolate; display:inline-block;
+    background:var(--chip-bg); color:var(--chip-ink); font-weight:700; font-size:16px;
+    padding:8px 14px; border-radius:10px; letter-spacing:.01em;
+  }
+  .copy-btn{
+    border:1px solid var(--border); background:var(--surface); color:var(--ink);
+    font-family:inherit; font-size:13.5px; font-weight:600; cursor:pointer;
+    padding:9px 16px; border-radius:10px; transition:background .15s, border-color .15s;
+  }
+  .copy-btn:hover{ border-color:var(--accent); color:var(--accent-ink); }
+  .copy-btn:focus-visible{ outline:2px solid var(--accent); outline-offset:2px; }
+
+  .callout{
+    background:var(--accent-soft); border:1px solid var(--accent-border);
+    border-radius:14px; padding:16px 18px; margin-bottom:34px; font-size:14.5px; color:var(--ink);
+  }
+  .callout b{ color:var(--accent-ink); }
+  .callout ul{ margin:8px 0 0; padding-inline-start:20px; }
+  .callout li{ margin-bottom:4px; }
+
+  .steps{ display:flex; flex-direction:column; gap:6px; }
+  .step{ position:relative; padding-inline-start:44px; padding-bottom:34px; }
+  .step:not(:last-child)::before{
+    content:""; position:absolute; inset-inline-start:15px; top:34px; bottom:0;
+    width:2px; background:var(--border);
+  }
+  .step-num{
+    position:absolute; inset-inline-start:0; top:0;
+    width:32px; height:32px; border-radius:50%;
+    background:var(--accent); color:#fff; font-weight:800; font-size:14.5px;
+    display:flex; align-items:center; justify-content:center;
+    box-shadow:0 0 0 4px var(--bg);
+  }
+  .step h2{ font-size:16.5px; font-weight:700; margin:2px 0 6px; }
+  .step p{ font-size:14px; color:var(--ink-muted); margin:0 0 12px; max-width:62ch; }
+  .step p b{ color:var(--ink); font-weight:600; }
+  .shot{
+    border:1px solid var(--border); border-radius:12px; overflow:hidden;
+    box-shadow:var(--shadow); background:var(--surface); max-width:100%;
+  }
+  .shot img{ display:block; width:100%; height:auto; }
+  .shot.narrow{ max-width:320px; }
+  .fig-cap{ font-size:12px; color:var(--ink-faint); margin:6px 2px 0; }
+
+  .note{
+    display:flex; gap:10px; align-items:flex-start;
+    background:var(--warn-soft); border:1px solid var(--warn-border);
+    border-radius:12px; padding:12px 14px; font-size:13.5px; color:var(--ink); margin-top:12px;
+  }
+  .note .dot{ color:var(--warn); font-weight:800; flex:none; }
+
+  table.recap{ width:100%; border-collapse:collapse; margin:6px 0 0; font-size:13.5px; }
+  table.recap th, table.recap td{
+    text-align:right; padding:10px 12px; border-bottom:1px solid var(--border-soft);
+  }
+  table.recap th{ color:var(--ink-faint); font-weight:600; font-size:12.5px; }
+  table.recap td.val{ font-weight:600; }
+  table.recap td.val span{ direction:ltr; unicode-bidi:isolate; display:inline-block; }
+
+  .closing{
+    margin-top:8px; background:var(--surface); border:1px solid var(--border);
+    border-radius:16px; padding:20px 20px; box-shadow:var(--shadow);
+  }
+  .closing h2{ font-size:16px; margin:0 0 8px; }
+  .closing p{ font-size:14px; color:var(--ink-muted); margin:0 0 6px; }
+
+  .privacy-note{
+    margin-top:28px; font-size:12px; color:var(--ink-faint); text-align:center; line-height:1.8;
+  }
+
+  @media (max-width:480px){
+    .wrap{ padding:20px 16px 48px; }
+    h1{ font-size:22px; }
+    .handle-card{ padding:14px; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <span class="eyebrow">راهنمای مشتری · گام‌به‌گام</span>
+  <h1>اتصال حساب به سیستم کپی‌تریدینگ ماتریکس</h1>
+  <p class="lede">
+    این راهنما نشان می‌دهد چطور حساب معاملاتی خودتان در لایت‌فایننس را — کاملاً از طریق پنل خودِ بروکر،
+    بدون نصب هیچ نرم‌افزاری و بدون اشتراک‌گذاری رمز عبور با کسی — به سیستم کپی‌تریدینگ متصل کنید.
+  </p>
+
+  <div class="handle-card">
+    <div>
+      <div class="label">نام Trader برای جستجو</div>
+      <span class="handle-chip">@FractalMatrixFX</span>
+    </div>
+    <button class="copy-btn" id="copyBtn" type="button">کپی نام</button>
+  </div>
+
+  <div class="callout">
+    <b>این کار را فقط خودتان انجام می‌دهید.</b> تمام مراحل زیر داخل حساب کاربری شخصی شما در
+    <span dir="ltr" style="unicode-bidi:isolate">my.litefinance.org</span> است. هیچ‌کس دیگری — نه ما، نه شخص دیگری —
+    به رمز عبور یا حساب شما نیاز ندارد یا دسترسی پیدا نمی‌کند.
+    <ul>
+      <li>مبلغی که تخصیص می‌دهید، در پول واقعی شما اثر می‌گذارد — قبل از تأیید نهایی حتماً مقادیر را بررسی کنید.</li>
+      <li>تصاویر این راهنما نمونه‌اند و اطلاعات شخصی/مالی از آن‌ها حذف شده است.</li>
+    </ul>
+  </div>
+
+  <div class="steps">
+
+    <div class="step">
+      <div class="step-num">۱</div>
+      <h2>بررسی اهرم حساب (Leverage)</h2>
+      <p>
+        وارد <b>my.litefinance.org</b> شوید → از نوار کناری <b>MT (METATRADER)</b> را بزنید.
+        اگر موجودی حساب شما کم است، کنار <b>LEVERAGE</b> روی <b>edit</b> کلیک کنید و به
+        <b>۱:۱۰۰۰</b> تغییر دهید.
+      </p>
+      <div class="shot"><img src="images/step-account.png" alt="صفحه Main account با فیلد LEVERAGE و جدول Trading accounts"></div>
+      <p class="fig-cap">همان صفحه برای گام ۲ هم استفاده می‌شود.</p>
+      <div class="note">
+        <span class="dot">⚠</span>
+        <span>با اهرم پیش‌فرض ۱:۱۰۰ و موجودی کم، ممکن است سیستم حتی نتواند یک معامله باز کند (کمبود مارجین). این مرحله را جدی بگیرید.</span>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">۲</div>
+      <h2>فعال‌کردن حساب درست (Set as main)</h2>
+      <p>
+        اگر بیش از یک حساب معاملاتی دارید، در همان صفحه، کنار حسابی که می‌خواهید با آن کپی کنید،
+        روی <b>Set as main</b> کلیک کنید. این تعیین می‌کند کدام حساب واقعاً درگیر کپی‌تریدینگ شود.
+      </p>
+      <div class="note">
+        <span class="dot">⚠</span>
+        <span>این مرحله را فراموش نکنید — اگر حساب اشتباه فعال باشد، کپی‌تریدینگ روی حساب دیگری تنظیم می‌شود.</span>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">۳</div>
+      <h2>جستجوی پروفایل</h2>
+      <p>از نوار جستجوی بالای صفحه، عبارت <b>FractalMatrixFX</b> را تایپ کنید و پروفایل را باز کنید.</p>
+      <div class="shot narrow"><img src="images/searchbar.png" alt="نوار جستجوی بالای صفحهٔ لایت‌فایننس"></div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">۴</div>
+      <h2>تنظیم پنل Copy</h2>
+      <p>
+        در پروفایل، پنل <b>Copy</b> سمت راست باز می‌شود. مبلغ تخصیصی خودتان را وارد کنید و
+        <b>Copy settings</b> را باز کنید.
+      </p>
+      <div class="shot"><img src="images/step-settings.png" alt="پنل Copy با تنظیمات Copy opened orders، Copy type، Max loss و Max profit"></div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">۵</div>
+      <h2>انتخاب نوع کپی (Copy type)</h2>
+      <p>
+        روی این فیلد کلیک کنید و از بین گزینه‌ها <b>«In proportion to my assets»</b> را انتخاب کنید —
+        تنها گزینه‌ای که حجم معاملات را متناسب با اکوییتی خودتان تنظیم می‌کند.
+      </p>
+      <div class="shot narrow"><img src="images/step-copytype.png" alt="لیست گزینه‌های Copy type"></div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">۶</div>
+      <h2>تعیین Max loss و تأیید نهایی</h2>
+      <p>
+        یک سقف ضرر منطقی (مثلاً ۲۰ تا ۳۰٪ از مبلغ تخصیصی) در <b>Max loss</b> وارد کنید، مطمئن شوید
+        درصد <b>FUNDS</b> برابر <b>۱۰۰٪</b> است (یعنی درست روی حساب خودتان تنظیم شده)، سپس <b>COPY</b> را بزنید.
+      </p>
+      <div class="shot"><img src="images/step-final.png" alt="پنل نهایی Copy با Max loss تنظیم‌شده و آماده برای تأیید"></div>
+    </div>
+
+  </div>
+
+  <div class="closing">
+    <h2>خلاصهٔ تنظیمات پیشنهادی</h2>
+    <table class="recap">
+      <tr><th>فیلد</th><th>مقدار پیشنهادی</th></tr>
+      <tr><td>Copy opened orders</td><td class="val"><span>خالی (غیرفعال)</span></td></tr>
+      <tr><td>Copy type</td><td class="val"><span>In proportion to my assets</span></td></tr>
+      <tr><td>Max loss</td><td class="val"><span>۲۰–۳۰٪ از مبلغ تخصیصی</span></td></tr>
+      <tr><td>Max profit</td><td class="val"><span>بدون سقف (اختیاری)</span></td></tr>
+      <tr><td>Leverage (زیر ۱۰۰$)</td><td class="val"><span>1:1000</span></td></tr>
+    </table>
+    <p style="margin-top:14px">
+      اگر در هر مرحله مطمئن نبودید، از دکمهٔ <b>CHAT</b> در پنل خودِ لایت‌فایننس با پشتیبانی صحبت کنید —
+      آن‌ها به حساب شما دسترسی مستقیم دارند و می‌توانند دقیق‌ترین راهنمایی را بدهند.
+    </p>
+  </div>
+
+  <p class="privacy-note">
+    تصاویر این صفحه از پنل واقعی گرفته شده‌اند؛ نام، شماره حساب، ایمیل، شماره تماس و مبالغ مالی از همهٔ آن‌ها حذف شده است.
+  </p>
+
+</div>
+
+<script>
+  (function(){
+    var btn = document.getElementById('copyBtn');
+    if(!btn) return;
+    btn.addEventListener('click', function(){
+      var text = '@FractalMatrixFX';
+      var done = function(){
+        var old = btn.textContent;
+        btn.textContent = 'کپی شد ✓';
+        setTimeout(function(){ btn.textContent = old; }, 1600);
+      };
+      try{
+        if(navigator.clipboard && navigator.clipboard.writeText){
+          navigator.clipboard.writeText(text).then(done).catch(done);
+        } else { done(); }
+      }catch(e){ done(); }
+    });
+  })();
+</script>
+</body>
+</html>
